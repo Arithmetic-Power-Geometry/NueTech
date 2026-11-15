@@ -142,7 +142,7 @@ st.subheader(product+" product")
 st.write("**Reporting frameworks:** "+PACKS[product]["frameworks"])
 st.write("**Components included:**")
 for item in PACKS[product]["modules"]: st.write("• "+item)
-tab1,tab2,tab3,tab4=st.tabs(["CMS Mapping","Integration Architecture","Workspace Checklist","Print / Export"])
+tab1,tab2,tab3,tab4=st.tabs(["CMS Mapping","Integration Architecture","Included Modules","Print / Export"])
 with tab1:
  st.table([{"Advertised CMS component":a,"QualityHub import":b,"QualityHub additions":c} for a,b,c in SOURCES])
  st.caption("Field mapping is configurable for each CMS installation.")
@@ -151,21 +151,20 @@ with tab2:
  for a,b in STEPS:
   with st.expander(a): st.write(b)
 with tab3:
- for i,item in enumerate(CHECKS): st.checkbox(item,key=f"{product}-{i}")
- st.caption("Checklist selections apply to the current session.")
+ for item in PACKS[product]["modules"]:
+  st.write("✓ "+item)
+ st.caption("Module configuration and availability depend on the institution’s selected package.")
 with tab4:
  st.write("Download the integration guide and print it or save it as PDF.")
  st.download_button("Download printable product overview (HTML)",printable(product),file_name=f"NueTech_QualityHub_{product}_Integration_Blueprint.html",mime="text/html")
  
 st.divider()
-st.subheader("Integration Documents")
-st.write("Download the module mapping, integration reference and technical schema.")
+st.subheader("Product Resources")
+st.write("Download the product integration overview and module field dictionary.")
 base="https://github.com/Arithmetic-Power-Geometry/NueTech/blob/main/"
 for title,relative in [
     ("Full module-by-module integration manual","manual/06_COMPLETE_INTEGRATION_MANUAL.md"),
     ("Module field dictionary (CSV)","manual/06_MODULE_FIELD_DICTIONARY.csv"),
-    ("PostgreSQL base schema (SQL)","architecture/02_POSTGRES_SCHEMA.sql"),
-    ("Database hardening migration (SQL)","architecture/03_HARDENING_MIGRATION.sql"),
 ]:
     st.markdown(f"- [{title}]({base}{relative})")
 
@@ -175,8 +174,6 @@ project_root=Path(__file__).resolve().parent.parent
 for title,relative in [
     ("Integration manual (Markdown)","manual/06_COMPLETE_INTEGRATION_MANUAL.md"),
     ("All three products: field dictionary (CSV)","manual/06_MODULE_FIELD_DICTIONARY.csv"),
-    ("PostgreSQL schema (SQL)","architecture/02_POSTGRES_SCHEMA.sql"),
-    ("PostgreSQL hardening (SQL)","architecture/03_HARDENING_MIGRATION.sql"),
 ]:
     candidate=(project_root/relative).resolve()
     if candidate.is_relative_to(project_root) and candidate.is_file():
@@ -197,7 +194,7 @@ st.download_button("Download module mapping (JSON)",_json.dumps(assumed,indent=2
 st.caption("Modules outside the selected CMS plan can be supplied through authorized import or manual entry.")
 st.divider()
 st.subheader("Data Import & Field Mapping")
-st.caption("Preview field matching and validation using sample CSV files.")
+st.caption("Preview field matching and validation using sample CSV files. This screen does not save uploaded records.")
 from csv_preview import inspect_csv
 from demo_fields import FIELDS
 domain=st.selectbox("Data domain",list(FIELDS),key="preview_domain")
@@ -245,4 +242,4 @@ st.write("**Internal status:** "+result["status"])
 st.caption(result["disclaimer"])
 
 st.divider()
-st.caption(CREDIT+" · NueTech QualityHub")
+st.caption(CREDIT+" · NueTech QualityHub · Sample-data demonstration")
