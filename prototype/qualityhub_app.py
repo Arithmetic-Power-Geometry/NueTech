@@ -48,18 +48,19 @@ CHECKS=[
  "Approve commercial packaging, branding and deployment boundaries"
 ]
 def printable(product):
+    """Print-ready product and integration overview for commercial discussions."""
     sections=[
-      ("Product and applicability",f"{NAME} — {product} Pack. {PACKS[product]['frameworks']}. Product entitlement does not establish regulatory eligibility."),
-      ("Modules", "\n".join("• "+m for m in PACKS[product]["modules"])),
-      ("Existing CMS mapping","\n".join(f"• {a} → {b}; addon: {c}" for a,b,c in SOURCES)),
-      ("Integration sequence","\n".join(f"{a}: {b}" for a,b in STEPS)),
-      ("Implementation acceptance checklist","\n".join("☐ "+x for x in CHECKS)),
-      ("Delivery boundary","Synthetic public demonstration only. Actual CMS interfaces and current official templates require verification. No automatic portal submission, no certified accreditation/ranking claim, and no production deployment until tested.")
+      ("Product Overview",f"{NAME} — {product}. Quality-assurance workspaces: {PACKS[product]['frameworks']}."),
+      ("Product Modules","\n".join("• "+m for m in PACKS[product]["modules"])),
+      ("CMS Integration Matrix","\n".join(f"• {source} → {destination}; additional information: {extra}" for source,destination,extra in SOURCES)),
+      ("Integration Approach","\n".join(f"{title}: {description}" for title,description in STEPS[:5])),
+      ("Data and Reporting Flow","Existing CMS → Authorized read-only transfer → Field mapping and validation → QualityHub reporting workspace → Evidence review → Report export."),
+      ("Implementation Scope","The integration matrix presents the proposed configuration. Actual CMS columns, access permissions, and applicable regulatory editions are confirmed during implementation.")
     ]
     body="".join(f"<section><h2>{html.escape(title)}</h2><p>{html.escape(value).replace(chr(10),'<br>')}</p></section>" for title,value in sections)
-    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{NAME} — {product} Integration Blueprint</title>
+    return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>{NAME} — {product} Product Overview</title>
 <style>body{{font-family:Arial,sans-serif;color:#15253b;max-width:850px;margin:35px auto;line-height:1.5}}h1{{color:#0c4265}}h2{{border-bottom:1px solid #cad6df;padding-bottom:5px;margin-top:25px}}section{{break-inside:avoid}}p{{white-space:normal}}.small{{color:#536576}}@media print{{body{{margin:12mm}}section{{break-inside:auto}}}}</style></head><body>
-<h1>{NAME}</h1><p><strong>{html.escape(CREDIT)}</strong></p><p class="small">Integration and implementation blueprint | {html.escape(product)} | Generated {date.today().isoformat()} | Proposed architecture, not a certification</p>
+<h1>{NAME}</h1><p><strong>{html.escape(CREDIT)}</strong></p><p class="small">{html.escape(product)} | Product and Integration Overview | {date.today().isoformat()}</p>
 {body}<footer><hr><p class="small">{NAME} · {html.escape(CREDIT)}</p></footer></body></html>"""
 
 st.set_page_config(page_title=NAME,layout="wide")
@@ -138,10 +139,10 @@ st.caption("Integration pathways are configurable to match each institution’s 
 
 product=st.selectbox("Select separately licensed product",list(PACKS))
 st.subheader(product+" product")
-st.write("**Applicable frameworks:** "+PACKS[product]["frameworks"])
+st.write("**Reporting frameworks:** "+PACKS[product]["frameworks"])
 st.write("**Components included:**")
 for item in PACKS[product]["modules"]: st.write("• "+item)
-tab1,tab2,tab3,tab4=st.tabs(["CMS Mapping","Integration Architecture","Readiness Checklist","Final Print / Export"])
+tab1,tab2,tab3,tab4=st.tabs(["CMS Mapping","Integration Architecture","Workspace Checklist","Print / Export"])
 with tab1:
  st.table([{"Advertised CMS component":a,"QualityHub import":b,"QualityHub additions":c} for a,b,c in SOURCES])
  st.caption("Field mapping is configurable for each CMS installation.")
@@ -154,7 +155,7 @@ with tab3:
  st.caption("Checklist selections apply to the current session.")
 with tab4:
  st.write("Download the integration guide and print it or save it as PDF.")
- st.download_button("Download printable integration blueprint (HTML)",printable(product),file_name=f"NueTech_QualityHub_{product}_Integration_Blueprint.html",mime="text/html")
+ st.download_button("Download printable product overview (HTML)",printable(product),file_name=f"NueTech_QualityHub_{product}_Integration_Blueprint.html",mime="text/html")
  
 st.divider()
 st.subheader("Integration Documents")
