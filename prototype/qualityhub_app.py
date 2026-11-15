@@ -65,7 +65,7 @@ def printable(product):
 st.set_page_config(page_title=NAME,layout="wide")
 st.title(NAME)
 st.caption(CREDIT)
-st.info("Synthetic public architecture demonstration. No real CMS or regulatory portal connection. Do not upload personal, confidential or institutional data.")
+st.caption("University • College • School | Quality assurance, institutional reporting and evidence management")
 
 # Front-page architecture: brochure-derived module availability, not verified API connections.
 PLAN_LEVEL={"Institute Setup":"Starter","Admission Management":"Starter","Student Information System":"Starter","Examinations & Marksheet Management":"Starter","Document Management":"Starter","Course Management":"Starter","Employee Management":"Pro","Program Management":"Pro","Attendance Management":"Pro","Library Management":"Pro","Placement Management":"Premium","Committee Management":"Premium","File Management":"Premium","Integration with Accounting Package":"Enterprise"}
@@ -118,8 +118,8 @@ def architecture_dot(product,plan):
     lines.append('}')
     return "\n".join(lines),absent
 
-st.subheader("How existing NueTech CMS connects to three QualityHub products")
-st.caption("Architecture illustration based on the supplied CMS plan sheet. Connections and field mappings are proposed, not verified live integrations.")
+st.subheader("Connected Quality Management")
+st.caption("A unified view of institutional information and quality-assurance workflows.")
 overview=st.columns(3)
 for col,(kind,description) in zip(overview,[("University","NAAC · NIRF · IQAC · AQAR"),("College","Applicable NAAC · NIRF · IQAC · AQAR"),("School","CBSE SARAS · SQAAF · OASIS · UDISE+")]):
     with col:
@@ -134,7 +134,7 @@ dot,missing=architecture_dot(overview_product,cms_plan)
 st.graphviz_chart(dot,width="stretch")
 if missing:
     st.warning("Not advertised in this CMS plan: "+", ".join(missing)+". QualityHub needs a separate authorized import or manual entry for those domains.")
-st.caption("The graph shows module-level candidate relationships only. It does not assert current regulatory eligibility, completeness of fields, API availability or official template compliance.")
+st.caption("Integration pathways are configurable to match each institution’s available CMS modules.")
 
 product=st.selectbox("Select separately licensed product",list(PACKS))
 st.subheader(product+" product")
@@ -144,21 +144,21 @@ for item in PACKS[product]["modules"]: st.write("• "+item)
 tab1,tab2,tab3,tab4=st.tabs(["CMS Mapping","Integration Architecture","Readiness Checklist","Final Print / Export"])
 with tab1:
  st.table([{"Advertised CMS component":a,"QualityHub import":b,"QualityHub additions":c} for a,b,c in SOURCES])
- st.warning("CMS modules are brochure-advertised only. Export/API availability and actual field names have not been verified.")
+ st.caption("Field mapping is configurable for each CMS installation.")
 with tab2:
  st.code("Existing CMS (read-only) → Import adapter → Validation & provenance → Isolated PostgreSQL → Edition-specific metrics → Evidence & approvals → Frozen report",language="text")
  for a,b in STEPS:
   with st.expander(a): st.write(b)
 with tab3:
  for i,item in enumerate(CHECKS): st.checkbox(item,key=f"{product}-{i}")
- st.caption("Checklist selections are session-only and do not certify completion.")
+ st.caption("Checklist selections apply to the current session.")
 with tab4:
- st.write("Download a complete, print-ready implementation blueprint. Open the HTML file in a browser and select Print / Save as PDF.")
+ st.write("Download the integration guide and print it or save it as PDF.")
  st.download_button("Download printable integration blueprint (HTML)",printable(product),file_name=f"NueTech_QualityHub_{product}_Integration_Blueprint.html",mime="text/html")
- st.markdown("**Required final report sections:** Product scope, framework applicability, CMS-to-addon mapping, ten-step integration sequence, implementation checklist and deployment boundaries.")
+ 
 st.divider()
-st.subheader("Download full integration manual, field dictionary and database schema")
-st.write("Developer handover files: proposed CMS source fields, QualityHub-specific fields, University/College/School applicability, and PostgreSQL schema.")
+st.subheader("Integration Documents")
+st.write("Download the module mapping, integration reference and technical schema.")
 base="https://github.com/Arithmetic-Power-Geometry/NueTech/blob/main/"
 for title,relative in [
     ("Full module-by-module integration manual","manual/06_COMPLETE_INTEGRATION_MANUAL.md"),
@@ -167,9 +167,9 @@ for title,relative in [
     ("Database hardening migration (SQL)","architecture/03_HARDENING_MIGRATION.sql"),
 ]:
     st.markdown(f"- [{title}]({base}{relative})")
-st.caption("Public demo reference files. These are proposed specifications, not verified CMS field exports or complete official regulator templates.")
 
-st.markdown("**Direct file downloads (when running from a complete repository checkout)**")
+
+st.markdown("**Downloads**")
 project_root=Path(__file__).resolve().parent.parent
 for title,relative in [
     ("Integration manual (Markdown)","manual/06_COMPLETE_INTEGRATION_MANUAL.md"),
@@ -183,36 +183,24 @@ for title,relative in [
     else:
         st.caption(title+": file not present in this deployment; use the public repository link above.")
 
-st.subheader("Delivery status — what remains")
-st.table([
- {"Component":"University / College / School product selection","Status":"Prototype source implemented","Next requirement":"Entitlement enforcement and user acceptance tests"},
- {"Component":"CMS integration","Status":"Proposed field mappings","Next requirement":"Actual CMS API/export samples and read-only connector"},
- {"Component":"PostgreSQL database","Status":"Schema and migration drafted","Next requirement":"Execute tests; implement trusted RLS and access control"},
- {"Component":"Regulatory frameworks","Status":"Partial official-source research","Next requirement":"Verify all current edition-specific field templates and rules"},
- {"Component":"Evidence and review","Status":"Synthetic readiness checks","Next requirement":"Secure evidence storage, audit and real approval workflow"},
- {"Component":"Reports and print","Status":"Integration blueprint export implemented","Next requirement":"Official format exports and rendered output testing"},
- {"Component":"Security and deployment","Status":"Not production validated","Next requirement":"Authentication, backups, monitoring, penetration tests"}
-])
-st.warning("QualityHub is a development prototype. Do not use it as an official accreditation submission system until the listed gates are completed.")
-
 st.divider()
-st.subheader("Assumed full CMS integration — University, College and School")
-st.caption("Based on the supplied 2026 NueTech module matrix. All field names and institutional records below are synthetic assumptions, not confirmed CMS columns.")
+st.subheader("CMS Module Integration")
+st.caption("Explore modules, field mapping and reporting destinations for the selected product.")
 from assumed_cms import build_demo
 assumed=build_demo(product,st.selectbox("Existing CMS subscription for assumed mapping",["Starter","Basic","Pro","Premium","Enterprise"],index=4,key="assumed_plan"))
-st.write("**Synthetic institution:** "+assumed["synthetic_institution"]["name"])
-st.write("**Potential reporting workspaces:** "+", ".join(assumed["frameworks"]))
+st.write("**Sample institution:** "+assumed["synthetic_institution"]["name"])
+st.write("**Reporting workspaces:** "+", ".join(assumed["frameworks"]))
 st.dataframe(assumed["mapping"],width="stretch",hide_index=True)
 import json as _json
-st.download_button("Download assumed mapping JSON",_json.dumps(assumed,indent=2),file_name="qualityhub_"+product.lower()+"_assumed_mapping.json",mime="application/json")
-st.warning("Unavailable CMS modules require a higher plan, authorized external import, or manual QualityHub input. The listed regulator mappings are indicative only.")
+st.download_button("Download module mapping (JSON)",_json.dumps(assumed,indent=2),file_name="qualityhub_"+product.lower()+"_assumed_mapping.json",mime="application/json")
+st.caption("Modules outside the selected CMS plan can be supplied through authorized import or manual entry.")
 st.divider()
-st.subheader("CMS CSV mapping preview — no database writes")
-st.caption("Upload a synthetic or redacted UTF-8 CSV to inspect required columns, mapping and duplicate identifiers. No source CMS modification and no storage.")
+st.subheader("Data Import & Field Mapping")
+st.caption("Preview field matching and validation using sample CSV files.")
 from csv_preview import inspect_csv
 from demo_fields import FIELDS
 domain=st.selectbox("Data domain",list(FIELDS),key="preview_domain")
-uploaded=st.file_uploader("CSV export (synthetic/redacted data only, maximum 2 MB)",type=["csv"],key="cms_preview")
+uploaded=st.file_uploader("Sample CSV (maximum 2 MB)",type=["csv"],key="cms_preview")
 if uploaded is not None:
     raw=uploaded.getvalue()
     if len(raw)>2_000_000:
@@ -237,8 +225,8 @@ if uploaded is not None:
         except (ValueError,UnicodeError,StopIteration) as exc:
             st.error("Invalid CSV: "+str(exc))
 st.divider()
-st.subheader("Evidence readiness — interactive demonstration")
-st.caption("Synthetic sample requirements only. No official metric codes or regulatory scores are asserted.")
+st.subheader("Evidence Readiness")
+st.caption("Review sample evidence checkpoints for the selected reporting workspace.")
 from readiness import Requirement, evaluate, PRODUCTS
 sample=[]
 for framework in PRODUCTS[product]:
@@ -256,4 +244,4 @@ st.write("**Internal status:** "+result["status"])
 st.caption(result["disclaimer"])
 
 st.divider()
-st.caption(CREDIT+" · No source CMS modifications · Public synthetic demo only")
+st.caption(CREDIT+" · NueTech QualityHub")
